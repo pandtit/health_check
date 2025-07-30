@@ -9,8 +9,8 @@ Laravel 健康监控包：通过 API 端点实时监测数据库/缓存/队列�
 
 ```bash
 
-# 安装包（自动从 GitLab 拉取）
-composer require Pandtit/health_check:dev-master
+# 安装包
+composer require Pandtit/health_check
 
 ```
 
@@ -46,6 +46,20 @@ HEALTH_CHECK_QUEUE_ENABLED=false
 
 
 ## healthy
+
+## simple
+```json
+{
+    "errcode": 0,
+    "errmsg": null,
+    "status": "healthy",
+    "data": [],
+    "at": "2025-07-30T02:12:32.063030Z",
+    "service": "southcn_feed"
+}
+```
+
+### multiple
 ```json
 {
     "errcode": 0,
