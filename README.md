@@ -55,7 +55,7 @@ HEALTH_CHECK_QUEUE_ENABLED=false
     "status": "healthy",
     "data": [],
     "at": "2025-07-30T02:12:32.063030Z",
-    "service": "southcn_feed"
+    "service": "your_app"
 }
 ```
 
@@ -86,7 +86,7 @@ HEALTH_CHECK_QUEUE_ENABLED=false
         "queue": "unhealthy"
     },
     "at": "2025-07-29T06:41:07.036335Z",
-    "service": "Laravel"
+    "service": "your_app"
 }
 ```
 
