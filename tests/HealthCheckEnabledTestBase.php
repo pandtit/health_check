@@ -24,4 +24,15 @@ abstract class HealthCheckEnabledTestBase extends TestCase
         $app['config']->set('health.checks.cache', false);
         $app['config']->set('health.checks.queue', false);
     }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        $this->defineEnvironment($app);
+    }
+
+    protected function withClientIp($ip)
+    {
+        $this->app['request']->server->set('REMOTE_ADDR', $ip);
+        return $this;
+    }
 }

@@ -21,6 +21,11 @@ class HealthCheckDisabledTest extends TestCase
         ]);
     }
 
+    protected function getEnvironmentSetUp($app)
+    {
+        $this->defineEnvironment($app);
+    }
+
     public function test_health_route_returns_404_when_disabled()
     {
         $this->get('/api/health')->assertStatus(404);
