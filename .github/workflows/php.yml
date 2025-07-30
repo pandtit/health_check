@@ -14,24 +14,24 @@ jobs:
         # 定义 Laravel 版本矩阵
         laravel: ['5.8.*','7.*','8.*'] # 你可以根据需要添加或修改版本
         # 也可以添加 PHP 版本矩阵 (强烈推荐，因为不同 Laravel 版本支持不同 PHP 版本)
-        php: ['8.0', '8.1', '8.2', '8.3']
-        # 可选：排除不兼容的组合
-        # exclude:
-        #   - laravel: '8.*'
-        #     php: '8.3' # Laravel 8 可能不支持 PHP 8.3
-        #   - laravel: '9.*'
-        #     php: '8.3' # Laravel 9 可能不支持 PHP 8.3
-        # 请查阅 Laravel 官方文档确认每个版本支持的 PHP 版本
-      # 可选：如果只想测试特定组合，可以使用 include
-      # include:
-      #   - laravel: '8.*'
-      #     php: '8.0'
-      #   - laravel: '9.*'
-      #     php: '8.1'
-      #   - laravel: '10.*'
-      #     php: '8.2'
-      #   - laravel: '11.*'
-      #     php: '8.3'
+        php: ['7.4']
+        exclude:
+        # 排除 Laravel 5.8 与 PHP 7.4+ 的组合
+        - laravel: '5.8.*'
+          php: '7.4'
+        - laravel: '5.8.*'
+          php: '8.0'
+        - laravel: '5.8.*'
+          php: '8.1'
+        - laravel: '5.8.*'
+          php: '8.2'
+        # 排除 Laravel 7.* 与 PHP 8.0+ 的组合
+        - laravel: '7.*'
+          php: '8.0'
+        - laravel: '7.*'
+          php: '8.1'
+        - laravel: '7.*'
+          php: '8.2'
 
     runs-on: ubuntu-latest
 
@@ -42,7 +42,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: "7.4"
+        php-version:  ${{ matrix.php }}
         # ${{ matrix.php }}
         extensions: mbstring, dom, fileinfo # 根据你的包需求添加必要扩展
         coverage: none # 如果不需要代码覆盖率报告
