@@ -1,0 +1,83 @@
+name: Test
+
+on:
+  push:
+    branches: [ "main", "master" ] # 根据你的主分支名称调整
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test:
+    # 使用矩阵定义不同的测试环境
+    strategy:
+      matrix:
+        # 定义 Laravel 版本矩阵
+        laravel: ['5.8.*','7.*','8.*'] # 你可以根据需要添加或修改版本
+        # 也可以添加 PHP 版本矩阵 (强烈推荐，因为不同 Laravel 版本支持不同 PHP 版本)
+        php: ['8.0', '8.1', '8.2', '8.3']
+        # 可选：排除不兼容的组合
+        # exclude:
+        #   - laravel: '8.*'
+        #     php: '8.3' # Laravel 8 可能不支持 PHP 8.3
+        #   - laravel: '9.*'
+        #     php: '8.3' # Laravel 9 可能不支持 PHP 8.3
+        # 请查阅 Laravel 官方文档确认每个版本支持的 PHP 版本
+      # 可选：如果只想测试特定组合，可以使用 include
+      # include:
+      #   - laravel: '8.*'
+      #     php: '8.0'
+      #   - laravel: '9.*'
+      #     php: '8.1'
+      #   - laravel: '10.*'
+      #     php: '8.2'
+      #   - laravel: '11.*'
+      #     php: '8.3'
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "7.4"
+        # ${{ matrix.php }}
+        extensions: mbstring, dom, fileinfo # 根据你的包需求添加必要扩展
+        coverage: none # 如果不需要代码覆盖率报告
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+
+    - name: Cache Composer packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.composer/cache
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Install dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - name: Install Laravel ${{ matrix.laravel }}
+      # 关键步骤：覆盖 laravel/framework 版本
+      # 方法1: 使用 composer require 覆盖 (推荐，更清晰)
+      run: |
+        composer require "laravel/framework:${{ matrix.laravel }}" --no-update
+        composer update --prefer-dist --no-interaction --no-suggest
+      # 方法2: 直接修改 composer.json (有时更可靠，避免依赖解析冲突)
+      # run: |
+      #   composer config platform.php ${{ matrix.php }} # 确保平台PHP版本正确
+      #   composer require "laravel/framework:${{ matrix.laravel }}" --no-update --no-scripts
+      #   composer update --prefer-dist --no-interaction --no-suggest
+
+    - name: Execute tests (phpunit)
+      run: vendor/bin/phpunit
+
+    # 可选：添加静态分析工具
+    # - name: Run PHPStan
+    #   run: vendor/bin/phpstan analyse
+
+    # - name: Run Pint (Laravel's code style fixer)
+    #   run: vendor/bin/pint --test
