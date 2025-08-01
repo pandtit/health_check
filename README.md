@@ -1,5 +1,15 @@
 
-# Laravel Health Check
+<div align="left">
+    
+<h1>Laravel Health Check</h1>
+
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/pandtit/health_check.svg?style=flat-square)](https://packagist.org/packages/pandtit/health_check)
+[![run-tests](https://github.com/pandtit/health_check/actions/workflows/php.yml/badge.svg)](https://github.com/pandtit/health_check/actions/workflows/php.yml)
+[![Check & fix styling](https://github.com/pandtit/health_check/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/pandtit/health_check/actions/workflows/dependency-review.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/pandtit/health_check.svg?style=flat-square)](https://packagist.org/packages/pandtit/health_check)
+    
+</div>
+
 
 Laravel Health Check: Monitors database/cache/queue connectivity with IP whitelist security, providing real-time status checks via API endpoints.
 
