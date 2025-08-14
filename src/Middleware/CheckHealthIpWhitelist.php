@@ -4,6 +4,7 @@ namespace Pandtit\HealthCheck\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,8 +14,13 @@ class CheckHealthIpWhitelist
     {
         $allowedIps = config('health.allowed_ips', []);
         $allowProxy = config('health.allow_proxy', false);
+        $logEnabled = config('health.log_enabled', false); // 是否开启日志
 
         if (empty($allowedIps)) {
+            $message = 'Health check denied: no allowed IPs configured.';
+            if ($logEnabled) {
+                Log::warning($message);
+            }
             return response()->json(['errcode' => 403, 'errmsg' => 'Forbidden'], 403);
         }
 
@@ -22,9 +28,15 @@ class CheckHealthIpWhitelist
         $clientIp = $this->getClientIp($request, $allowProxy);
 
         if (!$clientIp) {
+            $message = 'Health check denied: unable to determine client IP.';
+            if ($logEnabled) {
+                Log::warning($message . ' Request from: ' . $request->ip());
+            }
             return response()->json(['errcode' => 403, 'errmsg' => 'Forbidden'], 403);
         }
 
+
+        $isAllowed = false;
         foreach ($allowedIps as $allowed) {
             $allowed = trim($allowed);
             if (empty($allowed)) {
@@ -32,11 +44,28 @@ class CheckHealthIpWhitelist
             }
 
             if (IpUtils::checkIp($clientIp, $allowed)) {
-                return $next($request);
+                $isAllowed = true;
+                break;
             }
         }
 
-        return response()->json(['errcode' => 403, 'errmsg' => 'Forbidden'], 403);
+        if ($isAllowed) {
+            return $next($request);
+        } else {
+            $message = "Health check denied: IP {$clientIp} is not allowed.";
+            if ($logEnabled) {
+                Log::warning($message, [
+                    'client_ip' => $clientIp,
+                    'client_ips' => $request->ips(),
+                    'allow_ips' => $allowedIps,
+                    'url' => $request->fullUrl(),
+                    'method' => $request->method(),
+                    'user_agent' => $request->userAgent()
+                ]);
+            }
+            return response()->json(['errcode' => 403, 'errmsg' => 'Forbidden'], 403);
+        }
+
     }
 
     /**

@@ -50,6 +50,9 @@ HEALTH_CHECK_IPS_ALLOW_PROXY=false
 HEALTH_CHECK_DB_ENABLED=false
 HEALTH_CHECK_CACHE_ENABLED=false
 HEALTH_CHECK_QUEUE_ENABLED=false
+
+# 是否记录日志
+HEALTH_CHECK_LOG_ENABLED=true
 ```
 
 
@@ -107,5 +110,9 @@ HEALTH_CHECK_QUEUE_ENABLED=false
 
 ```text
 status 403
+```
+
+```json
+{"errcode":403,"errmsg":"Forbidden"}
 ```
 

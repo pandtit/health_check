@@ -18,4 +18,8 @@ return [
         'cache' => env('HEALTH_CHECK_CACHE_ENABLED', false),
         'queue' => env('HEALTH_CHECK_QUEUE_ENABLED', false),
     ],
+
+    // 控制是否记录日志
+    'log_enabled' => env('HEALTH_CHECK_LOG_ENABLED', true),
+
 ];
