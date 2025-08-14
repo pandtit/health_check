@@ -2,9 +2,9 @@ name: Test
 
 on:
   push:
-    branches: [ "main", "master" ] # 根据你的主分支名称调整
+    branches: [ "main", "master" ,"dev"] # 根据你的主分支名称调整
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "main", "master" ,"dev"]
 
 jobs:
   test:
