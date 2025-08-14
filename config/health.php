@@ -10,6 +10,9 @@ return [
         '::1',
     ],
 
+    // 允许代理, 默认获取真实
+    'allow_proxy' => env('HEALTH_CHECK_IPS_ALLOW_PROXY', false),
+
     'checks' => [
         'database' => env('HEALTH_CHECK_DB_ENABLED', false),
         'cache' => env('HEALTH_CHECK_CACHE_ENABLED', false),
