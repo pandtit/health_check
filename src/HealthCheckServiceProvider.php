@@ -5,6 +5,7 @@ namespace Pandtit\HealthCheck;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Pandtit\HealthCheck\Middleware\CheckHealthIpWhitelist;
+use Pandtit\HealthCheck\Monitoring\DatabaseWatcher;
 
 class HealthCheckServiceProvider extends ServiceProvider
 {
@@ -59,6 +60,11 @@ class HealthCheckServiceProvider extends ServiceProvider
             Route::get('health', HealthCheckController::class)
                 ->middleware($middleware)
                 ->name('health.check');
+        });
+
+        // 注册所有 Watcher
+        $this->app->booted(function () {
+            (new DatabaseWatcher)->register();
         });
     }
 }

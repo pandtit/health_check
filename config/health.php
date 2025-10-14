@@ -16,12 +16,34 @@ return [
 
     'checks' => [
         'database' => env('HEALTH_CHECK_DB_ENABLED', false),
+        'database_slow_query' => env('HEALTH_CHECK_DB_SLOW_QUERY_ENABLED', false),
         'cache' => env('HEALTH_CHECK_CACHE_ENABLED', false),
         'queue' => env('HEALTH_CHECK_QUEUE_ENABLED', false),
     ],
 
+    // 监听
+    'watchers' => [
+        'database' => [
+            'slow_query_threshold' => env('HEALTH_CHECK_DB_SLOW_QUERY_THRESHOLD', 100),
+            'slow_query_rate_limit_per_hour' => env('SLOW_QUERY_RATE_LIMIT_PER_HOUR', 100),
+            'slow_query_circuit_breaker_threshold' => env('SLOW_QUERY_CIRCUIT_BREAKER_THRESHOLD', 50), // 10 秒内超过 50 次（即 >= 51）触发熔断
+        ]
+    ],
+
+    'name' => [
+        'session' => [
+            'user_id' => env('HEALTH_CHECK_NAME_UID', 'uid'), // session 用户命名
+        ]
+    ],
+
     // 控制是否记录日志
     'log_enabled' => env('HEALTH_CHECK_LOG_ENABLED', true),
+
+    'log' => [
+        'channels' => [
+            'slow_query' => env('HEALTH_CHECK_LOG_CHANNEL_SLOW_QUERY', 'daily'), // 慢查询日志
+        ]
+    ],
 
 
 
